@@ -1,0 +1,49 @@
+version: '3.1'
+
+networks:
+  frontend:
+    driver: ${NETWORKS_DRIVER}
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+volumes:
+  mariadb:
+    driver: ${VOLUMES_DRIVER}
+  adminer:
+    driver: ${VOLUMES_DRIVER}
+
+services:
+#  app:
+#    build:
+#      context: ./docker/golang
+#    volumes:
+#      - ".:/go/src/app"
+#    container_name: app
+#    ports:
+#      - "8000:80"
+  ### MariaDB ##############################################
+  mariadb:
+    restart: always
+    build:
+      context: ./docker/mariadb
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+        - MARIADB_VERSION=${MARIADB_VERSION}
+    volumes:
+      - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
+      - ${MARIADB_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "${MARIADB_PORT}:3306"
+    environment:
+      - TZ=${WORKSPACE_TIMEZONE}
+      - MYSQL_DATABASE=${MARIADB_DATABASE}
+      - MYSQL_USER=${MARIADB_USER}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MYSQL_ROOT_HOST=%
+    networks:
+      - backend
+    container_name: mariadb
+
