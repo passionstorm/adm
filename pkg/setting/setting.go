@@ -43,7 +43,7 @@ type Database struct {
 	TablePrefix string
 }
 
-var DatabaseConfig = &Database{}
+var DbConfig = &Database{}
 
 var cfg *ini.File
 
@@ -55,7 +55,7 @@ func Load() {
 	}
 	mapTo("app", AppConfig)
 	mapTo("server", ServerConfig)
-	mapTo("database", DatabaseConfig)
+	mapTo("database", DbConfig)
 }
 
 func mapTo(section string, v interface{}) {

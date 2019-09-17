@@ -1,4 +1,4 @@
-package article
+package model
 
 type Article struct {
 	ID     string `json:"id"`
