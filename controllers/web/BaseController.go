@@ -14,14 +14,16 @@ type View struct {
 	Data           jet.VarMap
 }
 
-
 func (t *View) render(view string) {
 	var root, _ = os.Getwd()
 	var View = jet.NewHTMLSet(filepath.Join(root, "views"))
-	templ, err := View.GetTemplate(view + ".jet")
+	View.SetDevelopmentMode(true)
+	templ, err := View.GetTemplate(view)
 	if err != nil {
 		log.Println(err)
 	}
-
-	_ = templ.Execute(t.ResponseWriter, t.Data, nil)
+	err = templ.Execute(t.ResponseWriter, t.Data, nil)
+	if err != nil {
+		log.Println(err)
+	}
 }

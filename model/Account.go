@@ -9,7 +9,7 @@ type Account struct {
 	Password *string `json:"password"`
 	Phone    *string `json:"phone"`
 	Role     *string `json:"role"`
-	Active   bool    `json:"active"`
+	Actived  bool    `json:"actived"`
 	Token    string  `json:"token";sql:"-"`
 	Version  string  `json:"version"`
 	Model
