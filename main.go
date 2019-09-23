@@ -3,6 +3,7 @@ package main
 import (
 	"adm/model"
 	"adm/routers"
+	"flag"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -10,6 +11,9 @@ import (
 )
 
 func main() {
+	addr := flag.String("port", ":3000", "Http Server Port")
+	flag.Parse()
+
 	runtime.GOMAXPROCS(1)
 	err := godotenv.Load()
 	if err != nil {
@@ -17,5 +21,5 @@ func main() {
 	}
 	r := routers.Load()
 	model.Connect()
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(*addr, r)
 }
