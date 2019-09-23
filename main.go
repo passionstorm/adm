@@ -2,16 +2,20 @@ package main
 
 import (
 	"adm/model"
-	"adm/pkg/setting"
 	"adm/routers"
+	"github.com/joho/godotenv"
+	"log"
 	"net/http"
+	"runtime"
 )
 
 func main() {
-	setting.Load()
+	runtime.GOMAXPROCS(1)
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	r := routers.Load()
-	model.ConnectDB()
-	model.AutoMigrate()
-
+	model.Connect()
 	http.ListenAndServe(":3000", r)
 }

@@ -1,8 +1,6 @@
 package setting
 
 import (
-	"github.com/go-ini/ini"
-	"log"
 	"time"
 )
 
@@ -45,22 +43,6 @@ type Database struct {
 
 var DbConfig = &Database{}
 
-var cfg *ini.File
-
 func Load() {
-	var err error
-	cfg, err = ini.Load("conf/app.ini")
-	if err != nil {
-		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
-	}
-	mapTo("app", AppConfig)
-	mapTo("server", ServerConfig)
-	mapTo("database", DbConfig)
-}
 
-func mapTo(section string, v interface{}) {
-	err := cfg.Section(section).MapTo(v)
-	if err != nil {
-		log.Fatalf("Cfg.MapTo RedisSetting err: %v", err)
-	}
 }
