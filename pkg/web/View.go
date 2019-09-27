@@ -14,7 +14,7 @@ type View struct {
 	Data           jet.VarMap
 }
 
-func (t *View) render(view string) {
+func (t *View) Render(view string) {
 	var root, _ = os.Getwd()
 	var View = jet.NewHTMLSet(filepath.Join(root, "views"))
 	View.SetDevelopmentMode(true)
