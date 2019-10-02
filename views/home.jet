@@ -5,25 +5,9 @@
         <div class="hero-head"></div>
         <div class="hero-body">
             <div class="container is-small has-text-centered">
-             <table class="table is-bordered">
-                            <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>ABC</th>
-                                <th>aC</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {{range u := users}}
-                            <tr>
-                                <td> {{u.ID}} </td>
-                                <td> {{u.Username}}</td>
-                            </tr>
-                            {{end}}
-                            </tbody>
-                        </table>
-</div>
 
+</div>
+            {{users}}
         </div>
     </div>
 </section>
