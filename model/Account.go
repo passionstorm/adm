@@ -16,8 +16,8 @@ type Account struct {
 }
 
 func (account *Account) GetAllUser() []Account {
-	acc := []Account{}
-	err := db.Select(&acc, "SELECT * FROM accounts")
+	var acc []Account
+	err := db.Select(&acc, "SELECT * FROM accounts a WHERE a.deleted IS NOT NULL")
 	if err != nil {
 		log.Fatal(err)
 	}

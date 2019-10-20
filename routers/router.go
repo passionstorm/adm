@@ -1,7 +1,8 @@
 package routers
 
 import (
-	"adm/controllers/web"
+	"adm/controllers"
+	"adm/pkg/web"
 	"flag"
 	"github.com/CloudyKit/jet"
 	"github.com/go-chi/chi"
@@ -32,6 +33,7 @@ func Load() *chi.Mux {
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("pong"))
 	})
-	r.Get("/", do(web.Index))
+	homeCtl := controllers.HomeController{}
+	r.Get("/", do(homeCtl.Index))
 	return r
 }
