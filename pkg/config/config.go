@@ -1,12 +1,10 @@
 package config
 
 import (
-	"adm/pkg/constant"
 	"adm/pkg/logger"
-	"encoding/json"
 	"fmt"
-	"html/template"
-	"io/ioutil"
+	"github.com/joho/godotenv"
+	"os"
 	"strings"
 	"sync"
 )
@@ -34,10 +32,18 @@ func (d DatabaseList) Add(key string, db Database) {
 }
 
 const (
-	EnvTest  = "test"
-	EnvLocal = "local"
-	EnvProd  = "prod"
-
+	EnvTest          = "test"
+	EnvLocal         = "local"
+	EnvProd          = "prod"
+	ENV              = "ENV"
+	DB_VERSION       = "DB_VERSION"
+	DB_NAME          = "DB_NAME"
+	DB_USER          = "DB_USER"
+	DB_PASS          = "DB_PASS"
+	DB_HOST          = "DB_HOST"
+	DB_PORT          = "DB_PORT"
+	DB_DRIVER        = "DB_DRIVER"
+	DB_TABLE_PREFIX  = "DB_TABLE_PREFIX"
 	DriverMysql      = "mysql"
 	DriverSqlite     = "sqlite"
 	DriverPostgresql = "postgresql"
@@ -116,18 +122,6 @@ type Config struct {
 	// File upload engine, default "local"
 	FileUploadEngine FileUploadEngine `json:"file_upload_engine"`
 
-	// Custom html in the tag head.
-	CustomHeadHtml template.HTML `json:"custom_head_html"`
-
-	// Custom html after body.
-	CustomFootHtml template.HTML `json:"custom_foot_html"`
-
-	// Login page title
-	LoginTitle string `json:"login_title"`
-
-	// Login page logo
-	LoginLogo template.HTML `json:"login_logo"`
-
 	prefix string
 }
 
@@ -199,36 +193,60 @@ func (c Config) PrefixFixSlash() string {
 }
 
 var (
-	globalCfg Config
+	globalCfg *Config
 	mutex     sync.Mutex
 	declare   sync.Once
 )
 
-func ReadFromJson(path string) Config {
-	jsonByte, err := ioutil.ReadFile(path)
-
+func Load() *Config {
+	err := godotenv.Load()
 	if err != nil {
 		panic(err)
 	}
-
-	err = json.Unmarshal(jsonByte, &globalCfg)
-
-	if err != nil {
-		panic(err)
-	}
-
-	Set(globalCfg)
-
+	Set(&Config{
+		Databases: DatabaseList{
+			"default": Database{
+				Host:       os.Getenv(DB_HOST),
+				Port:       os.Getenv(DB_PORT),
+				User:       os.Getenv(DB_USER),
+				Pwd:        os.Getenv(DB_PASS),
+				Name:       os.Getenv(DB_NAME),
+				MaxIdleCon: 50,
+				MaxOpenCon: 150,
+				Driver:     os.Getenv(DB_DRIVER),
+				File:       "",
+			},
+		},
+		Domain:    "",
+		Language:  "en",
+		UrlPrefix: "",
+		//Theme:            "",
+		Store:            Store{},
+		Title:            "Manager",
+		IndexUrl:         "",
+		Debug:            true,
+		Env:              os.Getenv(ENV),
+		InfoLogPath:      "",
+		ErrorLogPath:     "",
+		AccessLogPath:    "",
+		SqlLog:           true,
+		AccessLogOff:     true,
+		InfoLogOff:       true,
+		ErrorLogOff:      true,
+		ColorScheme:      "",
+		SessionLifeTime:  0,
+		AssetUrl:         "",
+		FileUploadEngine: FileUploadEngine{},
+		prefix:           "",
+	})
 	return globalCfg
 }
 
 // Set sets the config.
-func Set(cfg Config) {
+func Set(cfg *Config) {
 	mutex.Lock()
 	globalCfg = cfg
 
-	globalCfg.Title = setDefault(globalCfg.Title, "", constant.Title)
-	globalCfg.LoginTitle = setDefault(globalCfg.LoginTitle, "", constant.Title)
 	globalCfg.IndexUrl = setDefault(globalCfg.IndexUrl, "", "/info/manager")
 	globalCfg.ColorScheme = setDefault(globalCfg.ColorScheme, "", "skin-black")
 	globalCfg.FileUploadEngine.Name = setDefault(globalCfg.FileUploadEngine.Name, "", "local")
@@ -266,7 +284,7 @@ Running in "debug" mode. Switch to "release" mode in production.`)
 }
 
 // Get gets the config.
-func Get() Config {
+func Get() *Config {
 	return globalCfg
 }
 

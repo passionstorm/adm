@@ -1,6 +1,9 @@
 package dialect
 
-import "strings"
+import (
+	"adm/pkg/config"
+	"strings"
+)
 
 type Dialect interface {
 	// GetName get dialect's name
@@ -30,18 +33,18 @@ func GetDialectByDriver(driver string) Dialect {
 		return mysql{
 			commonDialect: commonDialect{delimiter: "`"},
 		}
-	case "mssql":
-		return mssql{
-			commonDialect: commonDialect{delimiter: "`"},
-		}
-	case "postgresql":
-		return postgresql{
-			commonDialect: commonDialect{delimiter: `"`},
-		}
-	case "sqlite":
-		return sqlite{
-			commonDialect: commonDialect{delimiter: "`"},
-		}
+	//case "mssql":
+	//	return mssql{
+	//		commonDialect: commonDialect{delimiter: "`"},
+	//	}
+	//case "postgresql":
+	//	return postgresql{
+	//		commonDialect: commonDialect{delimiter: `"`},
+	//	}
+	//case "sqlite":
+	//	return sqlite{
+	//		commonDialect: commonDialect{delimiter: "`"},
+	//	}
 	default:
 		return commonDialect{delimiter: "`"}
 	}

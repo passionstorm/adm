@@ -44,7 +44,7 @@ func newSql() *Sql {
 // process method
 // *******************************
 
-func Table(table string) *Sql {
+func Get(table string) *Sql {
 	sql := newSql()
 	sql.TableName = table
 	sql.diver = GetConnection()

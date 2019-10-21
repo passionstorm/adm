@@ -9,9 +9,9 @@ import (
 )
 
 type View struct {
-	ResponseWriter http.ResponseWriter
-	Request        *http.Request
-	Data           jet.VarMap
+	Response http.ResponseWriter
+	Request  *http.Request
+	Data     jet.VarMap
 }
 
 func (t *View) Render(view string) {
@@ -22,7 +22,7 @@ func (t *View) Render(view string) {
 	if err != nil {
 		log.Println(err)
 	}
-	err = templ.Execute(t.ResponseWriter, t.Data, nil)
+	err = templ.Execute(t.Response, t.Data, nil)
 	if err != nil {
 		log.Println(err)
 	}

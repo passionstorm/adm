@@ -1,10 +1,9 @@
 package routers
 
 import (
-	"adm/controllers"
-	"adm/pkg/web"
+	"adm/controller"
+	"adm/pkg/context"
 	"flag"
-	"github.com/CloudyKit/jet"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
@@ -13,13 +12,9 @@ import (
 
 var routes = flag.Bool("routes", false, "Generate router documentation")
 
-func do(act func(action *web.View)) func(w http.ResponseWriter, r *http.Request) {
+func do(act func(ctx *context.Context)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		act(&web.View{
-			ResponseWriter: w,
-			Request:        r,
-			Data:           make(jet.VarMap),
-		})
+		act(context.NewContext(r, w))
 	}
 }
 
@@ -33,7 +28,7 @@ func Load() *chi.Mux {
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("pong"))
 	})
-	homeCtl := controllers.HomeController{}
+	homeCtl := controller.HomeController{}
 	r.Get("/", do(homeCtl.Index))
 	return r
 }

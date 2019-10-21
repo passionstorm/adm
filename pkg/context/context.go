@@ -3,20 +3,25 @@ package context
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/CloudyKit/jet"
 	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
 const abortIndex int8 = math.MaxInt8 / 2
 
 type Context struct {
-	Request   *http.Request
-	Response  *http.Response
-	UserValue map[string]interface{}
-	index     int8
-	handlers  Handlers
+	Request        *http.Request
+	Response       *http.Response
+	ResponseWriter http.ResponseWriter
+	Data           jet.VarMap
+	index          int8
+	handlers       Handlers
 }
 
 // Path is used in the matching of request and response. URL stores the
@@ -25,11 +30,6 @@ type Context struct {
 type Path struct {
 	URL    string
 	Method string
-}
-
-// SetUserValue set the value of user context.
-func (ctx *Context) SetUserValue(key string, value interface{}) {
-	ctx.UserValue[key] = value
 }
 
 // Path return the url path.
@@ -63,16 +63,17 @@ func (ctx *Context) Method() string {
 
 // NewContext used in adapter which return a Context with request
 // and slice of UserValue and a default Response.
-func NewContext(req *http.Request) *Context {
+func NewContext(req *http.Request, resWriter http.ResponseWriter) *Context {
 
 	return &Context{
-		Request:   req,
-		UserValue: make(map[string]interface{}),
+		Request: req,
+		Data:    make(jet.VarMap),
 		Response: &http.Response{
 			StatusCode: 200,
 			Header:     make(http.Header),
 		},
-		index: -1,
+		ResponseWriter: resWriter,
+		index:          -1,
 	}
 }
 
@@ -98,17 +99,31 @@ func (ctx *Context) Json(code int, Body map[string]interface{}) {
 }
 
 // Data writes some data into the body stream and updates the HTTP code.
-func (ctx *Context) Data(code int, contentType string, data []byte) {
-	ctx.Response.StatusCode = code
-	ctx.AddHeader("Content-Type", contentType)
-	ctx.Response.Body = ioutil.NopCloser(bytes.NewBuffer(data))
-}
+//func (ctx *Context) Data(code int, contentType string, data []byte) {
+//	ctx.Response.StatusCode = code
+//	ctx.AddHeader("Content-Type", contentType)
+//	ctx.Response.Body = ioutil.NopCloser(bytes.NewBuffer(data))
+//}
 
 // Html output html response.
 func (ctx *Context) Html(code int, body string) {
 	ctx.AddHeader("Content-Type", "text/html; charset=utf-8")
 	ctx.SetStatusCode(code)
 	ctx.WriteString(body)
+}
+
+func (t *Context) Render(view string) {
+	var root, _ = os.Getwd()
+	var View = jet.NewHTMLSet(filepath.Join(root, "views"))
+	View.SetDevelopmentMode(true)
+	templ, err := View.GetTemplate(view)
+	if err != nil {
+		log.Println(err)
+	}
+	err = templ.Execute(t.ResponseWriter, t.Data, nil)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 // Write save the given body string into the response.
@@ -174,7 +189,7 @@ func (ctx *Context) SetHeader(key, value string) {
 
 // User return the current login user.
 func (ctx *Context) User() interface{} {
-	return ctx.UserValue["user"]
+	return ctx.Data["user"]
 }
 
 // App is the key struct of the package. App as a member of plugin

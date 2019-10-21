@@ -2,6 +2,7 @@ package db
 
 import (
 	"adm/pkg/config"
+	"context"
 	"database/sql"
 	"errors"
 	"sync"

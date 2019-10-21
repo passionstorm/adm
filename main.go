@@ -1,11 +1,9 @@
 package main
 
 import (
-	"adm/model"
+	"adm/pkg/config"
 	"adm/routers"
 	"flag"
-	"github.com/joho/godotenv"
-	"log"
 	"net/http"
 	"runtime"
 )
@@ -13,13 +11,9 @@ import (
 func main() {
 	addr := flag.String("port", ":3000", "Http Server Port")
 	flag.Parse()
-
 	runtime.GOMAXPROCS(1)
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	config.Load()
 	r := routers.Load()
-	model.Connect()
+	//model.Connect()
 	http.ListenAndServe(*addr, r)
 }
