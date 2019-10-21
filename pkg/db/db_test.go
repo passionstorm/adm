@@ -3,6 +3,7 @@ package db
 import (
 	"adm/pkg/config"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"regexp"
 	"strings"
 	"testing"
@@ -26,7 +27,7 @@ func TestGetTypeFromString(t *testing.T) {
 		},
 	})
 
-	config.Set(config.Config{
+	config.Set(&config.Config{
 		SqlLog: true,
 	})
 

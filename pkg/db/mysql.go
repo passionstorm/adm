@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	_ "github.com/go-sql-driver/mysql"
 	"sync"
 )
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"adm/pkg/config"
+	"adm/pkg/db"
 	"adm/routers"
 	"flag"
 	"net/http"
@@ -13,6 +14,7 @@ func main() {
 	flag.Parse()
 	runtime.GOMAXPROCS(1)
 	config.Load()
+	db.GetConnection()
 	r := routers.Load()
 	//model.Connect()
 	http.ListenAndServe(*addr, r)
