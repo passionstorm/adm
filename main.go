@@ -1,21 +1,23 @@
 package main
 
 import (
-	"adm/pkg/config"
-	"adm/pkg/db"
-	"adm/routers"
-	"flag"
-	"net/http"
+	"adm/app/models"
+	"adm/app/pkg/view"
+	"adm/cmd"
 	"runtime"
 )
 
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+}
+
+
 func main() {
-	addr := flag.String("port", ":3000", "Http Server Port")
-	flag.Parse()
-	runtime.GOMAXPROCS(1)
-	config.Load()
-	db.GetConnection()
-	r := routers.Load()
-	//model.Connect()
-	http.ListenAndServe(*addr, r)
+	// Connect to database
+	db := models.InitDB()
+	defer db.Close()
+	// Setup templates
+	view.LoadTemplates()
+	// Get started
+	cmd.Execute()
 }
