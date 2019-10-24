@@ -3,8 +3,8 @@ package models_test
 import (
 	"adm/app/models"
 	"adm/testutils"
-	"testing"
 	"github.com/markbates/pop/nulls"
+	"testing"
 )
 
 func Test_CheckAdminCredentials(t *testing.T) {

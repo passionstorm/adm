@@ -3,10 +3,9 @@ package models
 import (
 	"errors"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gobuffalo/envy"
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
-	"log"
-	"os"
 	"strings"
 )
 
@@ -38,10 +37,11 @@ var db *sqlx.DB
 // InitDB sets up the database
 func InitDB() *sqlx.DB {
 	var err error
-	db, err = sqlx.Connect("mysql", os.Getenv(DbUser)+
-		":"+os.Getenv(DbPass)+"@tcp("+os.Getenv(DbHost)+")/"+os.Getenv(DbName)+"?charset=utf8mb4")
+	dns := envy.Get(DbUser, "root") +
+		":" + envy.Get(DbPass, "") + "@tcp(" + envy.Get(DbHost, "127.0.0.1:3306") + ")/" + envy.Get(DbName, "adm") + "?charset=utf8mb4"
+	db, err = sqlx.Connect("mysql", dns)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	return db

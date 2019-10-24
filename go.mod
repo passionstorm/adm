@@ -13,6 +13,7 @@ require (
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/sessions v1.2.0
 	github.com/jmoiron/sqlx v1.2.0
+	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.0.0
 	github.com/markbates/pop v3.60.6+incompatible
 	github.com/markbates/refresh v1.8.0

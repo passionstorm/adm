@@ -10,7 +10,7 @@ import (
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "alloy",
+	Use:   "adm",
 	Short: "Boilerplate for creating web apps in Go (golang)",
 	Long:  `Alloy is a starter template for creating web applications using Go programming language. It does not aim to be a web framework but is instead a collection of useful libraries and packages that acts a sensible starting point.`,
 }
