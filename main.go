@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	//runtime.GOMAXPROCS(runtime.NumCPU())
+	runtime.GOMAXPROCS(1)
 }
-
 
 func main() {
 	// Connect to database

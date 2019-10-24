@@ -13,9 +13,7 @@ var migrationStep int
 var migrationsDir = envy.Get("MIGRATIONS_DIR", "app/migrations")
 
 func init() {
-	RootCmd.AddCommand(dbCommand)
-	dbCommand.AddCommand(migrationCommand)
-
+	RootCmd.AddCommand(migrationCommand)
 	migrationCommand.AddCommand(statusCommand)
 
 	migrationCommand.AddCommand(migrateUpCommand)
@@ -28,20 +26,12 @@ func init() {
 	migrationCommand.AddCommand(migrateCreateCommand)
 }
 
-var dbCommand = &cobra.Command{
-	Use:   "db",
-	Short: "Manage the app's database.",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		os.MkdirAll(envy.Get("MIGRATIONS_DIR", "app/migrations"), 0766)
-	},
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
-	},
-}
-
 var migrationCommand = &cobra.Command{
 	Use:   "migrate",
 	Short: "Manage your apps database migrations",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		os.MkdirAll(envy.Get("MIGRATIONS_DIR", "app/migrations"), 0766)
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
