@@ -1,6 +1,7 @@
 package router
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -16,7 +17,6 @@ import (
 // New creates a new router instance and server
 func New() error {
 	mux := HandleRoutes()
-
 	addr := ":" + envy.Get("PORT", "1212")
 	server := http.Server{
 		Addr:         addr,
@@ -25,6 +25,7 @@ func New() error {
 		WriteTimeout: 10 * time.Second,
 	}
 
+	log.Printf("Start server: http://localhost%v", addr)
 	// production server will use nginx + letsencrypt
 	return server.ListenAndServe()
 }

@@ -11,7 +11,7 @@ import (
 func init() {
 	//runtime.GOMAXPROCS(runtime.NumCPU())
 	runtime.GOMAXPROCS(1)
-	log.SetFlags(log.LstdFlags | log.Llongfile)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 }
 
 func main() {

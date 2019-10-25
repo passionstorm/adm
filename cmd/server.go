@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"adm/app/router"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
-	"github.com/spf13/cobra"
 )
 
 var production bool
@@ -28,7 +28,6 @@ var serverCmd = &cobra.Command{
 			}
 		}
 
-		log.Println("Starting server...")
 		err := router.New()
 		if err != nil {
 			log.Fatal(err)

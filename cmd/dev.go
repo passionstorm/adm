@@ -72,9 +72,9 @@ func startDevServer(ctx context.Context) error {
 
 func startWebpack() error {
 	log.Println("Starting webpack...")
-	if _, err := os.Stat("webpack.config.js"); err != nil {
+	if _, err := os.Stat("vue.config.js"); err != nil {
 		return nil
 	}
 
-	return runCmd("npm", "run", "watch")
+	return runCmd("npm", "run", "serve")
 }
