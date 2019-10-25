@@ -4,17 +4,14 @@ import (
 	"adm/app/models"
 	"adm/app/pkg/view"
 	"adm/cmd"
-	"github.com/gobuffalo/envy"
+	"log"
 	"runtime"
 )
 
 func init() {
 	//runtime.GOMAXPROCS(runtime.NumCPU())
 	runtime.GOMAXPROCS(1)
-	err := envy.Load()
-	if err != nil {
-		panic(err)
-	}
+	log.SetFlags(log.LstdFlags | log.Llongfile)
 }
 
 func main() {

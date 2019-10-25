@@ -6,6 +6,7 @@ import (
 	"github.com/gobuffalo/envy"
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
+	"log"
 	"strings"
 )
 
@@ -41,7 +42,7 @@ func InitDB() *sqlx.DB {
 		":" + envy.Get(DbPass, "") + "@tcp(" + envy.Get(DbHost, "127.0.0.1:3306") + ")/" + envy.Get(DbName, "adm") + "?charset=utf8mb4"
 	db, err = sqlx.Connect("mysql", dns)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	return db

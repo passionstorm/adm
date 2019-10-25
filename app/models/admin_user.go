@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/lib/pq"
+	"adm/app/pkg/util"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
@@ -79,7 +79,7 @@ func (u *AdminUserModel) Create() error {
 	valid := u.Validate()
 
 	if !valid {
-		return errors.New("Invalid email/password")
+		return errors.New(util.MapToStr(u.Errors))
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
@@ -87,25 +87,15 @@ func (u *AdminUserModel) Create() error {
 		return errors.WithStack(err)
 	}
 	u.PasswordHash = nulls.NewString(string(hash))
-
-	stmt, err := db.PrepareNamed(`
+	stmt, err := db.NamedExec(`
 		INSERT INTO admin_users (name, email, password_hash, inserted_at, updated_at)
-		VALUES 			  (:name, :email, :password_hash, :inserted_at, :updated_at)
-		RETURNING id
-	`)
-
+		VALUES (:name, :email, :password_hash, :inserted_at, :updated_at)
+	`, u)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-
-	err = stmt.Get(&u.ID, u)
+	u.ID, err = stmt.LastInsertId()
 	if err != nil {
-		if pgerr, ok := err.(*pq.Error); ok {
-			if pgerr.Code == "23505" && pgerr.Constraint == "admin_users_email_index" {
-				return ErrAlreadyTaken
-			}
-		}
-
 		return errors.WithStack(err)
 	}
 

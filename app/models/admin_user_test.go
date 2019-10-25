@@ -2,20 +2,22 @@ package models_test
 
 import (
 	"adm/app/models"
-	"adm/testutils"
 	"github.com/markbates/pop/nulls"
 	"testing"
 )
 
 func Test_CheckAdminCredentials(t *testing.T) {
 	admin := models.AdminUserModel{
-		Email:    nulls.NewString("admin@example.com"),
-		Password: "testing123",
+		Email:    nulls.NewString("vohoangminhdn93@gmail.com"),
+		Password: "admin123",
 	}
-	admin.Create()
-	defer testutils.ResetTable("admin_users")
+	err := admin.Create()
+	if err != nil {
+		t.Error(err)
+	}
+	//defer testutils.ResetTable("admin_users")
 
-	res := admin.CheckAuth("testing123")
+	res := admin.CheckAuth("admin")
 	if res == false {
 		t.Error("Incorrect matching.")
 	}

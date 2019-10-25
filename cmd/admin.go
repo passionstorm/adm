@@ -3,7 +3,6 @@ package cmd
 import (
 	"adm/app/models"
 	"errors"
-	"fmt"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -15,10 +14,11 @@ func init() {
 	adminCmd.Flags().StringVarP(&name, "name", "n", "", "Name")
 	adminCmd.Flags().StringVarP(&email, "email", "e", "", "Email")
 	adminCmd.Flags().StringVarP(&password, "password", "p", "", "Password")
+	log.SetFlags(log.LstdFlags | log.Llongfile)
 }
 
 var adminCmd = &cobra.Command{
-	Use:   "new-admin",
+	Use:   "admin",
 	Short: "Manage the admin user",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if name == "" || email == "" || password == "" {
@@ -33,6 +33,6 @@ var adminCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Admin user <%s> created successfully.", name)
+		log.Printf("Admin user <%s> created successfully.", name)
 	},
 }

@@ -27,6 +27,6 @@ func TestMain(m *testing.M) {
 
 	c := m.Run()
 
-	testutils.DropDB()
+	//testutils.DropDB()
 	os.Exit(c)
 }

@@ -22,7 +22,7 @@ func init() {
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of alloy",
+	Short: "Print the version number of adm",
 	Long:  `Not the most useful command in the toolbox. It simply prints the current version of the Alloy toolkit.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Alloy version: %s\n", VERSION)

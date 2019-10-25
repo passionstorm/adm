@@ -2,12 +2,11 @@ package cmd
 
 import (
 	"context"
+	"github.com/markbates/refresh/refresh"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"time"
-
-	"github.com/markbates/refresh/refresh"
-	"github.com/spf13/cobra"
 )
 
 func init() {
@@ -53,7 +52,7 @@ func startDevServer(ctx context.Context) error {
 			IncludedExtensions: []string{".go", ".html"},
 			BuildPath:          os.TempDir(),
 			BuildDelay:         time.Second,
-			BinaryName:         "alloy-build",
+			BinaryName:         "adm-build",
 			CommandFlags:       []string{"server"},
 			CommandEnv:         []string{},
 			EnableColors:       true,
