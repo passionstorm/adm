@@ -8,12 +8,20 @@
         <div class="container">
             <div class="jumbotron">
                 <h1 class="display-3">ADM</h1>
-                <p class="lead">Boilerplate ssss for creating web applications in Golang</p>
+                <p class="lead">Boilerplate adm for creating web applications in Golang</p>
                 <hr class="my-4">
                 <p>a is a starter template for creating web applications. It is written using Go language (golang). Alloy is an omakase of sorts. It brings together many useful libraries and tools that you might need to build (CRUD) web applications</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="https://github.com/olliecoleman/alloy" role="button">Download from Github</a>
                 </p>
+            </div>
+
+            <div id="app">
+                <ul>
+                    <li v-for="l in list">
+                        ${l}
+                    </li>
+                </ul>
             </div>
 
             <div class="details">
@@ -91,3 +99,7 @@
         </div>
     </section><!-- /home -->
 {{ end }}
+
+{{ define "script" }}
+    <script src='{{ assetURL "/public/assets/frontend/home/home.js" }}'></script>
+{{end}}

@@ -49,7 +49,7 @@ func startDevServer(ctx context.Context) error {
 		c := refresh.Configuration{
 			AppRoot:            ".",
 			IgnoredFolders:     []string{"vendor", "log", "logs", "tmp", "node_modules", "bin", "templates"},
-			IncludedExtensions: []string{".go", ".html"},
+			IncludedExtensions: []string{".go", ".html", ".vue"},
 			BuildPath:          os.TempDir(),
 			BuildDelay:         time.Second,
 			BinaryName:         "adm-build",
@@ -72,9 +72,9 @@ func startDevServer(ctx context.Context) error {
 
 func startWebpack() error {
 	log.Println("Starting webpack...")
-	if _, err := os.Stat("vue.config.js"); err != nil {
+	if _, err := os.Stat("webpack.config.js"); err != nil {
 		return nil
 	}
 
-	return runCmd("npm", "run", "serve")
+	return runCmd("npm", "run", "watch")
 }
