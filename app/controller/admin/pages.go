@@ -6,12 +6,12 @@ import (
 	"adm/app/pkg/view"
 	"context"
 	"fmt"
-	"html/template"
-	"net/http"
-	"strconv"
 	"github.com/go-chi/chi"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
+	"html/template"
+	"net/http"
+	"strconv"
 )
 
 func ListPages(w http.ResponseWriter, r *http.Request) error {
@@ -44,7 +44,7 @@ func NewPage(w http.ResponseWriter, r *http.Request) error {
 	v := view.New(r)
 	page := models.Page()
 
-	v.Data["PageModel"] = page
+	v.Data["Page"] = page
 	v.Render(w, "admin/pages/new")
 	return nil
 }
@@ -64,7 +64,7 @@ func CreatePage(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			if err == models.ErrAlreadyTaken {
 				page.Errors["Slug"] = models.ErrAlreadyTaken.Error()
-				v.Data["PageModel"] = page
+				v.Data["Page"] = page
 				v.Render(w, "admin/pages/edit")
 				return nil
 			}
@@ -77,7 +77,7 @@ func CreatePage(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	v.Data["PageModel"] = page
+	v.Data["Page"] = page
 	v.Render(w, "admin/pages/new")
 	return nil
 }
@@ -91,7 +91,7 @@ func GetPage(w http.ResponseWriter, r *http.Request) error {
 		return controller.StatusError{Code: 404, Err: errors.New("unabled to retrieve page from context")}
 	}
 
-	v.Data["PageModel"] = page
+	v.Data["Page"] = page
 	v.Render(w, "admin/pages/show")
 	return nil
 }
@@ -105,7 +105,7 @@ func EditPage(w http.ResponseWriter, r *http.Request) error {
 		return controller.StatusError{Code: 404, Err: errors.New("unabled to retrieve page from context")}
 	}
 
-	v.Data["PageModel"] = page
+	v.Data["Page"] = page
 	v.Render(w, "admin/pages/edit")
 	return nil
 }
@@ -131,7 +131,7 @@ func UpdatePage(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			if err == models.ErrAlreadyTaken {
 				page.Errors["Slug"] = models.ErrAlreadyTaken.Error()
-				v.Data["PageModel"] = page
+				v.Data["Page"] = page
 				v.Render(w, "admin/pages/edit")
 				return nil
 			}

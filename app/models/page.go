@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/lib/pq"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 	"regexp"
@@ -29,13 +28,13 @@ func Page() *PageModel {
 }
 
 func ListPages(offset, limit int) ([]*PageModel, int, error) {
-	pages := []*PageModel{}
+	var pages []*PageModel
 	err := db.Select(&pages, `
 		SELECT 
 			id, title, slug, inserted_at
 		FROM pages 
 		ORDER BY inserted_at DESC
-		OFFSET $1 LIMIT $2
+		LIMIT ?, ?
 	`, offset, limit)
 	if err != nil {
 		return nil, 0, err
@@ -51,7 +50,7 @@ func ListPages(offset, limit int) ([]*PageModel, int, error) {
 }
 
 func ListAllPages() ([]*PageModel, error) {
-	pages := []*PageModel{}
+	var pages []*PageModel
 	err := db.Select(&pages, `
 		SELECT 
 			id, title, slug, inserted_at
@@ -70,7 +69,7 @@ func GetPage(ID int) (*PageModel, error) {
 		SELECT 
 			id, title, page_title, meta_description, content, slug, layout, inserted_at
 		FROM pages 
-		WHERE id = $1
+		WHERE id = ?
 	`, ID)
 	if err != nil {
 		return nil, err
@@ -85,7 +84,7 @@ func GetPageBySlug(slug string) (*PageModel, error) {
 		SELECT 
 			id, title, page_title, meta_description, content, slug, layout, inserted_at
 		FROM pages 
-		WHERE slug = $1
+		WHERE slug = ?
 	`, slug)
 	if err != nil {
 		return nil, err
@@ -97,24 +96,16 @@ func GetPageBySlug(slug string) (*PageModel, error) {
 func (p *PageModel) Create() error {
 	p.InsertedAt = time.Now()
 	p.UpdatedAt = time.Now()
-	stmt, err := db.PrepareNamed(`
+	stmt, err := db.NamedExec(`
 		INSERT INTO pages (slug, title, page_title, meta_description, layout, content, inserted_at, updated_at)
 		VALUES 			  (:slug, :title, :page_title, :meta_description, :layout, :content, :inserted_at, :updated_at)
-		RETURNING id
-	`)
+	`, p)
 
 	if err != nil {
 		return errors.WithStack(err)
 	}
-
-	err = stmt.Get(&p.ID, p)
+	p.ID, err = stmt.LastInsertId()
 	if err != nil {
-		if pgerr, ok := err.(*pq.Error); ok {
-			if pgerr.Code == "23505" && pgerr.Constraint == "pages_slug_index" {
-				return ErrAlreadyTaken
-			}
-		}
-
 		return errors.WithStack(err)
 	}
 
@@ -122,7 +113,7 @@ func (p *PageModel) Create() error {
 }
 
 func (p *PageModel) Delete() error {
-	_, err := db.Exec("DELETE from pages WHERE pages.id = $1", p.ID)
+	_, err := db.Exec("DELETE from pages WHERE pages.id = ?", p.ID)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -133,7 +124,7 @@ func (p *PageModel) Delete() error {
 func (p *PageModel) Update() error {
 	p.UpdatedAt = time.Now()
 
-	stmt, err := db.PrepareNamed(`
+	_, err := db.NamedExec(`
 		UPDATE pages 
 		SET
 			title = :title,
@@ -144,21 +135,9 @@ func (p *PageModel) Update() error {
 			slug = :slug,
 			updated_at = :updated_at
 		WHERE id = :id
-		RETURNING id
-	`)
+	`, p)
 
 	if err != nil {
-		return errors.WithStack(err)
-	}
-
-	err = stmt.Get(p, p)
-	if err != nil {
-		if pgerr, ok := err.(*pq.Error); ok {
-			if pgerr.Code == "23505" && pgerr.Constraint == "pages_slug_index" {
-				return ErrAlreadyTaken
-			}
-		}
-
 		return errors.WithStack(err)
 	}
 

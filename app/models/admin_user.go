@@ -33,7 +33,7 @@ func GetAdminUser(id int64) (*AdminUserModel, error) {
 	sql := `
 		SELECT id, name, email, password_hash
 		FROM admin_users
-		WHERE id=$1
+		WHERE id= ?
 	`
 
 	adminUser := AdminUserModel{}
@@ -49,7 +49,7 @@ func GetAdminByEmail(email string) (*AdminUserModel, error) {
 	sql := `
 		SELECT id, name, email, password_hash, inserted_at, updated_at 
 		FROM admin_users
-		WHERE email=$1
+		WHERE email= ?
 	`
 
 	adminUser := AdminUserModel{}

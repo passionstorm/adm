@@ -76,5 +76,5 @@ func startWebpack() error {
 		return nil
 	}
 
-	return runCmd("npm", "run", "watch")
+	return runCmd("npm", "run", "build")
 }

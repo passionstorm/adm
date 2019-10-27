@@ -39,7 +39,7 @@ var db *sqlx.DB
 func InitDB() *sqlx.DB {
 	var err error
 	dns := envy.Get(DbUser, "root") +
-		":" + envy.Get(DbPass, "") + "@tcp(" + envy.Get(DbHost, "127.0.0.1:3306") + ")/" + envy.Get(DbName, "adm") + "?charset=utf8mb4"
+		":" + envy.Get(DbPass, "") + "@tcp(" + envy.Get(DbHost, "127.0.0.1:3306") + ")/" + envy.Get(DbName, "adm") + "?charset=utf8mb4&parseTime=true"
 	db, err = sqlx.Connect("mysql", dns)
 	if err != nil {
 		log.Fatal(err)

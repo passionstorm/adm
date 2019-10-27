@@ -4,11 +4,17 @@ import (
 	"adm/app/models"
 	"adm/app/pkg/app"
 	"adm/app/pkg/view"
+	"log"
 	"net/http"
 )
 
 func GetLogin(w http.ResponseWriter, r *http.Request) error {
 	v := view.New(r)
+	redirects := r.URL.Query()["r"]
+	if len(redirects) > 0 {
+		v.Data["Redirect"] = redirects[0]
+	}
+
 	v.Data["Email"] = ""
 	v.Render(w, "admin/sessions/new")
 	return nil
@@ -24,15 +30,14 @@ func PostLogin(w http.ResponseWriter, r *http.Request) error {
 		loginErr(w, r, email)
 		return nil
 	}
-
 	adminUser, err := models.GetAdminByEmail(email)
 	if err != nil {
+		log.Println(err)
 		loginErr(w, r, email)
 		return nil
 	}
 
 	valid := adminUser.CheckAuth(password)
-
 	if valid == true {
 		session.Values["admin_user_id"] = adminUser.ID
 		session.Save(r, w)
@@ -42,7 +47,12 @@ func PostLogin(w http.ResponseWriter, r *http.Request) error {
 		}
 
 		view.SuccessFlash(w, r, "Logged in successfully")
-		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		redirect := ""
+		if redirect == "" {
+			redirect = "/admin"
+		}
+
+		http.Redirect(w, r, redirect, http.StatusSeeOther)
 		return nil
 	}
 

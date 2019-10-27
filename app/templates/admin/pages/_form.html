@@ -1,6 +1,5 @@
 {{ define "_form" }}
-    {{ with .Page }}   
-      
+    {{ with .Page }}
         {{ if .Errors }}
             <div class="alert alert-danger">
                 <p>Oops, something went wrong! Please check the errors below.</p>
@@ -73,6 +72,6 @@
         <div class="form-group">
             <input type="submit" value="Submit" class="btn btn-lg btn-primary" data-disable-with="Saving...">
         </div>
-    
+
     {{ end }}
 {{ end }}

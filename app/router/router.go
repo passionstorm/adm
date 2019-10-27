@@ -36,9 +36,9 @@ func HandleRoutes() *chi.Mux {
 
 	// Middlewares
 	r.Use(mw.MethodOverride)
-	r.Use(middleware.RequestID)
+	//r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
-	r.Use(middleware.RealIP)
+	//r.Use(middleware.RealIP)
 	r.Use(middleware.RedirectSlashes)
 	r.Use(mw.Recoverer)
 	r.Use(middleware.DefaultCompress)

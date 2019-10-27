@@ -4,8 +4,7 @@ import "bootstrap/js/dist/collapse.js";
 import "bootstrap/js/dist/alert.js";
 import "bootstrap/js/dist/dropdown.js";
 import "bootstrap/js/dist/tab.js";
-
-import { initEditor, initMiniEditor } from "./admin/utils/editor.js";
+import { initEditor, initMiniEditor } from "../utils/editor.js";
 
 $(function() {
     if ($("#editor").length) {
@@ -16,3 +15,6 @@ $(function() {
         initMiniEditor("#mini-editor");
     }
 });
+
+
+

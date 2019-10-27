@@ -8,8 +8,8 @@ import (
 
 func Test_CheckAdminCredentials(t *testing.T) {
 	admin := models.AdminUserModel{
-		Email:    nulls.NewString("vohoangminhdn93@gmail.com"),
-		Password: "admin123",
+		Email:    nulls.NewString("admin@gmail.com"),
+		Password: "asdf1234",
 	}
 	err := admin.Create()
 	if err != nil {
@@ -17,13 +17,8 @@ func Test_CheckAdminCredentials(t *testing.T) {
 	}
 	//defer testutils.ResetTable("admin_users")
 
-	res := admin.CheckAuth("admin")
+	res := admin.CheckAuth("asdf1234")
 	if res == false {
-		t.Error("Incorrect matching.")
-	}
-
-	res = admin.CheckAuth("foobar")
-	if res != false {
 		t.Error("Incorrect matching.")
 	}
 }
