@@ -23,9 +23,7 @@
                 <div class="form-group">
                     <input type="submit" value="Submit" class="btn btn-primary" data-disable-with="Submitting..." >
                 </div>
-                {{ with .Redirect}}
-                    <input name="redirect" type="hidden" value="{{ .Redirect }}">
-                {{end}}
+                <input name="redirect" type="hidden" value="{{ .Redirect }}">
             </form>
         </div>
     </div>

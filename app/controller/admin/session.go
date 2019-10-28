@@ -13,8 +13,9 @@ func GetLogin(w http.ResponseWriter, r *http.Request) error {
 	redirects := r.URL.Query()["r"]
 	if len(redirects) > 0 {
 		v.Data["Redirect"] = redirects[0]
+	} else {
+		v.Data["Redirect"] = ""
 	}
-
 	v.Data["Email"] = ""
 	v.Render(w, "admin/sessions/new")
 	return nil
@@ -25,7 +26,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) error {
 
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-
+	redirect := r.FormValue("redirect")
 	if email == "" || password == "" {
 		loginErr(w, r, email)
 		return nil
@@ -47,7 +48,6 @@ func PostLogin(w http.ResponseWriter, r *http.Request) error {
 		}
 
 		view.SuccessFlash(w, r, "Logged in successfully")
-		redirect := ""
 		if redirect == "" {
 			redirect = "/admin"
 		}
